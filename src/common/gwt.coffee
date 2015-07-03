@@ -9,6 +9,12 @@ uuid = require 'node-uuid'
 # Prefix Result attributes, so that they don't clash with proxied attributes
 # generated during resultTo()
 
+objKeys = (thing) ->
+  if typeof thing is 'object' then return Object.keys thing
+  console.log 'Object.keys error. Argument:', thing
+  console.log 'Stack': new Error().stack
+  throw new Error 'Oh no. Object.keys error.'
+
 
 hideAttributes = (object, keys...) ->
   attributes = {}
@@ -36,7 +42,7 @@ withContext = (object, keyword, fn) ->
   fn.apply keyword.get(object)
 
 proxyOnSelf = (container, object) ->
-  keys = Object.keys(object)
+  keys = objKeys(object)
 
   keys.forEach (key) ->
     Object.defineProperty container, key,
@@ -152,11 +158,11 @@ buildGwt = ({options}) ->
 
   getCounts = (spec) ->
     keys =
-      GIVEN: Object.keys(spec.GIVEN or {})
-      THEN: Object.keys(spec.THEN or {})
-      WHEN: Object.keys(spec.WHEN or {})
-      TAP: Object.keys(spec.TAP or {})
-      CALL: Object.keys(spec.TAP or {})
+      GIVEN: objKeys(spec.GIVEN or {})
+      THEN: objKeys(spec.THEN or {})
+      WHEN: objKeys(spec.WHEN or {})
+      TAP: objKeys(spec.TAP or {})
+      CALL: objKeys(spec.TAP or {})
 
     counts = {GIVEN: {}, WHEN: {}, THEN: {}, TAP: {}}
 
@@ -455,7 +461,7 @@ buildGwt = ({options}) ->
                 assert r instanceof Result, 'Subresult isnt bdd.result()'
                 r.setInContext results, lastResultValue[rkey]
             else
-              for key in Object.keys(result)
+              for key in objKeys(result)
                 delete result[key]
 
               _.extend result, lastResultValue
