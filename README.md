@@ -1,3 +1,7 @@
+gwt
+[![Build Status](https://api.travis-ci.org/Adslot/node-gwt.png)](https://travis-ci.org/Adslot/node-gwt)
+============
+
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
